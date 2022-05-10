@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="partials/_layout">
+<body>
+
+<div layout:fragment="content">
+
+  <main id="main" class="main">
+
+    <div class="pagetitle mb-5">
+      <h1>Employees</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a th:href="@{index}">Home</a></li>
+          <li class="breadcrumb-item">Peoples</li>
+          <li class="breadcrumb-item active">Employees</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+
+      <div class="row">
+        <div class="col">
+          <h2>Employees page</h2>
+        </div>
+      </div>
+
+    </section>
+
+  </main><!-- End #main -->
+</div>
+</body>
+
+</html>
