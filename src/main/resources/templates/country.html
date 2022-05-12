@@ -2,6 +2,15 @@
 <html lang="en"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="partials/_layout">
+<head>
+  <title th:fragment="title">Country - Fleet App - Spring Boot Project</title>
+
+  <style th:fragment="customCSS">
+    .custom-me{
+      color: red;
+    }
+  </style>
+</head>
 <body>
 
 <div layout:fragment="content">
@@ -9,7 +18,7 @@
   <main id="main" class="main">
 
     <div class="pagetitle mb-5">
-      <h1>Country</h1>
+      <h1 class="custom-me">Country</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a th:href="@{index}">Home</a></li>
@@ -23,7 +32,7 @@
       <div class="row">
         <div class="col-lg-12">
 
-          <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCountry">
+          <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCountryModal">
             Add Country
           </button>
 
@@ -38,8 +47,7 @@
                   <th scope="col">Capital</th>
                   <th scope="col">Code</th>
                   <th scope="col">Continent</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Nationality</th>
+                  <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,8 +56,17 @@
                   <td th:text="${country.capital}"></td>
                   <td th:text="${country.code}"></td>
                   <td th:text="${country.continent}"></td>
-                  <td th:text="${country.description}"></td>
-                  <td th:text="${country.nationality}"></td>
+                  <td>
+                    <a th:href="@{/countries/show(id=${country.id})}" class="btn btn-secondary mb-3 btn-sm" id="showCountryBtn">
+                        <i class="bi bi-eye text-light"></i>
+                    </a>
+                    <a th:href="@{/countries/show(id=${country.id})}" class="btn btn-info mb-3 btn-sm" id="editCountryBtn">
+                      <i class="bi bi-pen text-light"></i>
+                    </a>
+                    <a th:href="@{/countries/delete(id=${country.id})}" class="btn btn-danger mb-3 btn-sm" id="deleteCountryBtn">
+                      <i class="bi bi-trash text-light"></i>
+                    </a>
+                  </td>
                 </tr>
                 </tbody>
               </table>
@@ -62,7 +79,107 @@
       </div>
     </section>
 
-    <div class="modal fade" id="addCountry" tabindex="-1">
+    <!--  delete country modal  -->
+    <div class="modal fade" id="deleteCountryModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Confirm Delete Country</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+            <div class="modal-body">
+              <p>Are you sure, you want to delete the country?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
+              <a href="" id="confirmDeleteAction" class="btn btn-danger">Yes</a>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  edit country modal  -->
+    <div class="modal fade" id="editCountryModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Update Country Data</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form th:action="@{countries/update}" method="put">
+            <div class="modal-body">
+              <div class="form-group">
+                <input type="hidden" id="editId" name="id">
+
+                <label for="editCapital" class="col-form-label">Capital:</label>
+                <input type="text" class="form-control" id="editCapital" name="capital">
+              </div>
+              <div class="form-group">
+                <label for="editContinent" class="col-form-label">Continent:</label>
+                <input type="text" class="form-control" id="editContinent" name="continent">
+              </div>
+              <div class="form-group">
+                <label for="editDescription" class="col-form-label">Description:</label>
+                <input type="text" class="form-control" id="editDescription" name="description">
+              </div>
+              <div class="form-group">
+                <label for="editCode" class="col-form-label">Code:</label>
+                <input type="text" class="form-control" id="editCode" name="code">
+              </div>
+              <div class="form-group">
+                <label for="editNationality" class="col-form-label">Nationality:</label>
+                <input type="text" class="form-control" id="editNationality" name="nationality">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-success">Update</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!--  show country modal  -->
+    <div class="modal fade" id="showCountryModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">View Country Data</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="editCapital" class="col-form-label">Capital:</label>
+                <input type="text" class="form-control" id="showCapital">
+              </div>
+              <div class="form-group">
+                <label for="editContinent" class="col-form-label">Continent:</label>
+                <input type="text" class="form-control" id="showContinent">
+              </div>
+              <div class="form-group">
+                <label for="editDescription" class="col-form-label">Description:</label>
+                <input type="text" class="form-control" id="showDescription">
+              </div>
+              <div class="form-group">
+                <label for="editCode" class="col-form-label">Code:</label>
+                <input type="text" class="form-control" id="showCode">
+              </div>
+              <div class="form-group">
+                <label for="editNationality" class="col-form-label">Nationality:</label>
+                <input type="text" class="form-control" id="showNationality">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  add country modal  -->
+    <div class="modal fade" id="addCountryModal" tabindex="-1">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -103,6 +220,56 @@
 
   </main><!-- End #main -->
 </div>
+
+
+<script th:fragment="customJS">
+  $(function() {
+
+    $('table #deleteCountryBtn').on('click',function (e){
+      e.preventDefault();
+
+      //find by id uri : countries/delete?id=1
+      let uri = $(this).attr('href');
+      $('#confirmDeleteAction').attr('href',uri);
+      $('#deleteCountryModal').modal('show')
+    });
+
+
+    $('table #editCountryBtn').on('click',function (e){
+      e.preventDefault();
+
+      //find by id uri : countries/show?id=1
+      let uri = $(this).attr('href');
+      $.get(uri,function (country, status){
+        $('#editId').val(country.id)
+        $('#editCapital').val(country.capital)
+        $('#editContinent').val(country.continent)
+        $('#editCode').val(country.code)
+        $('#editDescription').val(country.description)
+        $('#editNationality').val(country.nationality)
+      })
+
+      $('#editCountryModal').modal('show')
+    });
+
+    $('table #showCountryBtn').on('click',function (e){
+      e.preventDefault();
+
+      //find by id uri : countries/show?id=1
+      let uri = $(this).attr('href');
+      $.get(uri,function (country, status){
+        $('#showId').val(country.id)
+        $('#showCapital').val(country.capital)
+        $('#showContinent').val(country.continent)
+        $('#showCode').val(country.code)
+        $('#showDescription').val(country.description)
+        $('#showNationality').val(country.nationality)
+      })
+
+      $('#showCountryModal').modal('show')
+    });
+  });
+</script>
 </body>
 
 </html>
