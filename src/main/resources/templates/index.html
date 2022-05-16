@@ -1,8 +1,14 @@
 <!DOCTYPE html>
-
 <html lang="en"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:layout="https://thymeleaf.org"
       layout:decorate="partials/_layout">
+<head>
+  <title th:fragment="title">Home - Fleet App - Spring Boot Project</title>
+
+  <style th:fragment="customCSS">
+  </style>
+</head>
+
 <body>
 
 <div layout:fragment="content">
@@ -580,5 +586,6 @@
   </main><!-- End #main -->
 </div>
 
+<script th:fragment="customJS"></script>
 </body>
 </html>
