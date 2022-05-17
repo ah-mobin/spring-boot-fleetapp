@@ -62,6 +62,12 @@
                                             <a th:href="@{/states/show(id=${state.id})}" class="btn btn-secondary mb-3 btn-sm" id="showStateBtn">
                                                 <i class="bi bi-eye text-light"></i>
                                             </a>
+                                            <a th:href="@{/states/show(id=${state.id})}" class="btn btn-secondary mb-3 btn-sm" id="editStateBtn">
+                                                <i class="bi bi-pen text-light"></i>
+                                            </a>
+                                            <a th:href="@{/states/delete(id=${state.id})}" class="btn btn-danger mb-3 btn-sm" id="deleteStateBtn">
+                                                <i class="bi bi-trash text-light"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -74,51 +80,96 @@
                 </div>
             </div>
         </section>
+    </main><!-- End #main -->
 
-        <!--  add country modal  -->
-        <div class="modal fade" id="addStateModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Add State</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form th:action="@{states}" method="post">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="country" class="col-form-label">Country:</label>
-                                <select name="country_id" id="country" class="form-control">
-                                    <option selected disabled>--SELECT--</option>
-                                    <option th:each="country:${countries}" th:value="${country.id}" th:text="${country.description}"></option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="name" class="col-form-label">Name:</label>
-                                <input type="text" class="form-control" id="name" name="name">
-                            </div>
-                            <div class="form-group">
-                                <label for="capital" class="col-form-label">Capital:</label>
-                                <input type="text" class="form-control" id="capital" name="capital">
-                            </div>
-                            <div class="form-group">
-                                <label for="code" class="col-form-label">Code:</label>
-                                <input type="text" class="form-control" id="code" name="code">
-                            </div>
-                            <div class="form-group">
-                                <label for="details" class="col-form-label">Details:</label>
-                                <input type="text" class="form-control" id="details" name="details">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Create</button>
-                        </div>
-                    </form>
+    <!--  add state modal  -->
+    <div class="modal fade" id="addStateModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add State</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <form th:action="@{states}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="country" class="col-form-label">Country:</label>
+                            <select name="country_id" id="country" class="form-control">
+                                <option selected disabled>--SELECT--</option>
+                                <option th:each="country:${countries}" th:value="${country.id}" th:text="${country.description}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="capital" class="col-form-label">Capital:</label>
+                            <input type="text" class="form-control" id="capital" name="capital">
+                        </div>
+                        <div class="form-group">
+                            <label for="code" class="col-form-label">Code:</label>
+                            <input type="text" class="form-control" id="code" name="code">
+                        </div>
+                        <div class="form-group">
+                            <label for="details" class="col-form-label">Details:</label>
+                            <input type="text" class="form-control" id="details" name="details">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Create</button>
+                    </div>
+                </form>
             </div>
         </div>
+    </div>
 
-    </main><!-- End #main -->
+    <!--  edit state modal  -->
+    <div class="modal fade" id="editStateModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit State</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form th:action="@{states/update}" method="put">
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="editId">
+                        <div class="form-group">
+                            <label for="country" class="col-form-label">Country:</label>
+                            <input type="text" id="editCountry" class="form-control">
+
+                            <select name="country_id" id="" class="form-control" required>
+                                <option selected disabled>--SELECT--</option>
+                                <option th:each="country:${countries}" th:value="${country.id}" th:text="${country.description}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="editName" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="capital" class="col-form-label">Capital:</label>
+                            <input type="text" class="form-control" id="editCapital" name="capital">
+                        </div>
+                        <div class="form-group">
+                            <label for="code" class="col-form-label">Code:</label>
+                            <input type="text" class="form-control" id="editCode" name="code">
+                        </div>
+                        <div class="form-group">
+                            <label for="details" class="col-form-label">Details:</label>
+                            <input type="text" class="form-control" id="editDetails" name="details">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!--  show state modal  -->
     <div class="modal fade" id="showStateModal" tabindex="-1">
@@ -158,6 +209,25 @@
         </div>
     </div>
 
+    <!--  delete state modal  -->
+    <div class="modal fade" id="deleteStateModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete State</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure, you want to delete the state?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
+                    <a href="" id="confirmDeleteAction" class="btn btn-danger">Yes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
@@ -178,6 +248,32 @@
             })
 
             $('#showStateModal').modal('show')
+        });
+
+        $('table #editStateBtn').on('click',function (e){
+            e.preventDefault();
+
+            //find by id uri : states/show?id=1
+            let uri = $(this).attr('href');
+            $.get(uri,function (state, status){
+                $('#editId').val(state.id)
+                $('#editCapital').val(state.capital)
+                $('#editName').val(state.name)
+                $('#editCode').val(state.code)
+                $('#editDetails').val(state.details)
+                $('#editCountry').val(state.country_id)
+            })
+
+            $('#editStateModal').modal('show')
+        });
+
+        $('table #deleteStateBtn').on('click',function (e){
+            e.preventDefault();
+
+            //find by id uri : countries/delete?id=1
+            let uri = $(this).attr('href');
+            $('#confirmDeleteAction').attr('href',uri);
+            $('#deleteStateModal').modal('show')
         });
     });
 </script>

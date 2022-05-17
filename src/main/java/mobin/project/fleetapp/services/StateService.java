@@ -24,4 +24,8 @@ public class StateService {
     public Optional<State> findById(int id){
         return stateRepository.findById(id);
     }
+
+    public void destroy(int id){
+        stateRepository.deleteById(id);
+    }
 }
