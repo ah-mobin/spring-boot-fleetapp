@@ -1,7 +1,17 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:layout="https://thymeleaf.org"
       layout:decorate="partials/_layout">
+<head>
+  <title th:fragment="title">Location - Fleet App - Spring Boot Project</title>
+
+  <style th:fragment="customCSS">
+    .custom-me{
+      color: red;
+    }
+  </style>
+</head>
+
 <body>
 
 <div layout:fragment="content">
@@ -9,28 +19,269 @@
   <main id="main" class="main">
 
     <div class="pagetitle mb-5">
-      <h1>Locations</h1>
+      <h1 class="custom-me">Location</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a th:href="@{index}">Home</a></li>
           <li class="breadcrumb-item">Global</li>
-          <li class="breadcrumb-item active">Locations</li>
+          <li class="breadcrumb-item active">Location</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
 
     <section class="section">
-
       <div class="row">
-        <div class="col">
-          <h2>Locations page</h2>
+        <div class="col-lg-12">
+
+          <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addLocationModal">
+            Add Location
+          </button>
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Location List</h5>
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">City</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">Details</th>
+                  <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="location:${locations}">
+                  <td th:text="${location.id}"></td>
+                  <td th:text="${location.city}"></td>
+                  <td th:text="${location.address}"></td>
+                  <td th:text="${location.details}"></td>
+                  <td>
+                    <a th:href="@{/locations/show(id=${location.id})}" class="btn btn-secondary mb-3 btn-sm" id="showLocationBtn">
+                      <i class="bi bi-eye text-light"></i>
+                    </a>
+                    <a th:href="@{/locations/show(id=${location.id})}" class="btn btn-secondary mb-3 btn-sm" id="editLocationBtn">
+                      <i class="bi bi-pen text-light"></i>
+                    </a>
+                    <a th:href="@{/locations/delete(id=${location.id})}" class="btn btn-danger mb-3 btn-sm" id="deleteLocationBtn">
+                      <i class="bi bi-trash text-light"></i>
+                    </a>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
         </div>
       </div>
-
     </section>
-
   </main><!-- End #main -->
+
+  <!--  add state modal  -->
+  <div class="modal fade" id="addLocationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Location</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form th:action="@{locations}" method="post">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="country" class="col-form-label">Country:</label>
+              <select name="country_id" id="country" class="form-control">
+                <option selected disabled>--SELECT--</option>
+                <option th:each="country:${countries}" th:value="${country.id}" th:text="${country.description}"></option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="state" class="col-form-label">State:</label>
+              <select name="state_id" id="state" class="form-control">
+                <option selected disabled>--SELECT--</option>
+                <option th:each="state:${states}" th:value="${state.id}" th:text="${state.name}"></option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="city" class="col-form-label">City:</label>
+              <input type="text" class="form-control" id="city" name="city">
+            </div>
+            <div class="form-group">
+              <label for="address" class="col-form-label">Address:</label>
+              <input type="text" class="form-control" id="address" name="address">
+            </div>
+            <div class="form-group">
+              <label for="details" class="col-form-label">Details:</label>
+              <input type="text" class="form-control" id="details" name="details">
+            </div>
+            <div class="form-group">
+              <label for="description" class="col-form-label">Description:</label>
+              <input type="text" class="form-control" id="description" name="description">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Create</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!--  edit state modal  -->
+  <div class="modal fade" id="editLocationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Location</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form th:action="@{locations/update}" method="put">
+          <div class="modal-body">
+            <input type="hidden" name="id" id="editId">
+            <div class="form-group">
+              <label for="country" class="col-form-label">Country:</label>
+              <input type="text" id="editCountry" class="form-control">
+
+              <select name="country_id" id="" class="form-control" required>
+                <option selected disabled>--SELECT--</option>
+                <option th:each="country:${countries}" th:value="${country.id}" th:text="${country.description}"></option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="name" class="col-form-label">Name:</label>
+              <input type="text" class="form-control" id="editName" name="name">
+            </div>
+            <div class="form-group">
+              <label for="capital" class="col-form-label">Capital:</label>
+              <input type="text" class="form-control" id="editCapital" name="capital">
+            </div>
+            <div class="form-group">
+              <label for="code" class="col-form-label">Code:</label>
+              <input type="text" class="form-control" id="editCode" name="code">
+            </div>
+            <div class="form-group">
+              <label for="details" class="col-form-label">Details:</label>
+              <input type="text" class="form-control" id="editDetails" name="details">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!--  show state modal  -->
+  <div class="modal fade" id="showLocationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">View Location Data</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="showName" class="col-form-label">Country:</label>
+            <input type="text" class="form-control" id="showCountry" disabled>
+          </div>
+          <div class="form-group">
+            <label for="showName" class="col-form-label">Name:</label>
+            <input type="text" class="form-control" id="showName" disabled>
+          </div>
+          <div class="form-group">
+            <label for="showCapital" class="col-form-label">Capital:</label>
+            <input type="text" class="form-control" id="showCapital" disabled>
+          </div>
+          <div class="form-group">
+            <label for="showDetails" class="col-form-label">Details:</label>
+            <input type="text" class="form-control" id="showDetails" disabled>
+          </div>
+          <div class="form-group">
+            <label for="showCode" class="col-form-label">Code:</label>
+            <input type="text" class="form-control" id="showCode" disabled>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  delete state modal  -->
+  <div class="modal fade" id="deleteLocationModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Delete Location</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure, you want to delete the state?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
+          <a href="" id="confirmDeleteAction" class="btn btn-danger">Yes</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script th:fragment="customJS">
+  $(function() {
+    $('table #showLocationBtn').on('click',function (e){
+      e.preventDefault();
+
+      //find by id uri : states/show?id=1
+      let uri = $(this).attr('href');
+      $.get(uri,function (state, status){
+        $('#showId').val(state.id)
+        $('#showCapital').val(state.capital)
+        $('#showName').val(state.name)
+        $('#showCode').val(state.code)
+        $('#showDetails').val(state.details)
+        $('#showCountry').val(state.country_id)
+      })
+
+      $('#showLocationModal').modal('show')
+    });
+
+    $('table #editLocationBtn').on('click',function (e){
+      e.preventDefault();
+
+      //find by id uri : states/show?id=1
+      let uri = $(this).attr('href');
+      $.get(uri,function (state, status){
+        $('#editId').val(state.id)
+        $('#editCapital').val(state.capital)
+        $('#editName').val(state.name)
+        $('#editCode').val(state.code)
+        $('#editDetails').val(state.details)
+        $('#editCountry').val(state.country_id)
+      })
+
+      $('#editLocationModal').modal('show')
+    });
+
+    $('table #deleteLocationBtn').on('click',function (e){
+      e.preventDefault();
+
+      //find by id uri : countries/delete?id=1
+      let uri = $(this).attr('href');
+      $('#confirmDeleteAction').attr('href',uri);
+      $('#deleteLocationModal').modal('show')
+    });
+  });
+</script>
+
 </body>
 
 </html>

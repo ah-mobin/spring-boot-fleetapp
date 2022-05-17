@@ -55,7 +55,7 @@
                                     <tr th:each="state:${stateList}">
                                         <td th:text="${state.id}"></td>
                                         <td th:text="${state.name}"></td>
-                                        <td th:text="${state.country_id}"></td>
+                                        <td th:text="${state.country.description}"></td>
                                         <td th:text="${state.code}"></td>
                                         <td th:text="${state.details}"></td>
                                         <td>
@@ -69,6 +69,7 @@
                                                 <i class="bi bi-trash text-light"></i>
                                             </a>
                                         </td>
+
                                     </tr>
                                 </tbody>
                             </table>
@@ -244,7 +245,7 @@
                 $('#showName').val(state.name)
                 $('#showCode').val(state.code)
                 $('#showDetails').val(state.details)
-                $('#showCountry').val(state.country_id)
+                $('#showCountry').val(state.country.description)
             })
 
             $('#showStateModal').modal('show')
